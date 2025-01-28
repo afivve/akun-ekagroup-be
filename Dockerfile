@@ -12,6 +12,9 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm ci
 
+# Generate Prisma Client
+RUN npm run prisma:generate
+
 # Bundle app source
 COPY . .
 

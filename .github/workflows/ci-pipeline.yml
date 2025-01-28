@@ -8,15 +8,15 @@ on:
 
 jobs:
   code-quality:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - name: Setup Biome
-      uses: biomejs/setup-biome@v2
-      with:
-        version: latest
-    - name: Run Biome
-      run: npm run lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+      - name: Run Biome
+        run: npm run lint
 
   test:
     runs-on: ubuntu-latest

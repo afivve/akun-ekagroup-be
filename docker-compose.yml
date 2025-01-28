@@ -2,7 +2,6 @@ version: "3.9"
 services:
   app:
     image: ghcr.io/afivve/akun-ekagroup-be:latest
-    restart: always
     ports:
       - "8080:8080"
     depends_on:

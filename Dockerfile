@@ -12,11 +12,11 @@ COPY package*.json ./
 # Install app dependencies
 RUN npm ci
 
-# Generate Prisma Client
-RUN npm run prisma:generate
-
 # Bundle app source
 COPY . .
+
+# Generate Prisma Client
+RUN npm run prisma:generate
 
 # Build the TypeScript files
 RUN npm run build

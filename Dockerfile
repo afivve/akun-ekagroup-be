@@ -19,4 +19,4 @@ RUN npm run build
 EXPOSE 8080
 
 # Start the app
-ENTRYPOINT ["sh", "-c", "npm prisma:prod:migrate && npm run start"]
+ENTRYPOINT ["sh", "-c", "npm run prisma:prod:migrate && npm run start"]

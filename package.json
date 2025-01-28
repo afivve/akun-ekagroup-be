@@ -19,7 +19,7 @@
     "prepare": "husky",
     "prisma:dev:migrate": "prisma migrate dev --schema=src/prisma/schema.prisma",
     "prisma:prod:migrate": "prisma migrate deploy --schema=src/prisma/schema.prisma",
-    "prisma:generate": "prisma generate"
+    "prisma:generate": "prisma generate --schema=src/prisma/schema.prisma"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
@@ -67,18 +67,11 @@
     ]
   },
   "tsup": {
-    "entry": [
-      "src",
-      "!src/**/__tests__/**",
-      "!src/**/*.test.*"
-    ],
+    "entry": ["src", "!src/**/__tests__/**", "!src/**/*.test.*"],
     "splitting": false,
     "sourcemap": true,
     "clean": true,
-    "format": [
-      "cjs",
-      "esm"
-    ],
+    "format": ["cjs", "esm"],
     "loader": {
       ".prisma": "text",
       ".toml": "text",

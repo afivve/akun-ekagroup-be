@@ -75,15 +75,14 @@
     "splitting": false,
     "sourcemap": true,
     "clean": true,
-    "external": [
-      "**/*.prisma",
-      "**/*.toml",
-      "**/*.sql"
+    "format": [
+      "cjs",
+      "esm"
     ],
-    "noExternal": [
-      "**/*.prisma",
-      "**/*.toml",
-      "**/*.sql"
-    ]
+    "loader": {
+      ".prisma": "text",
+      ".toml": "text",
+      ".sql": "text"
+    }
   }
 }

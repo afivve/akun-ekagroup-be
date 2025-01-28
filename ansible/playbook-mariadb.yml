@@ -1,0 +1,84 @@
+---
+- name: Setup MariaDB on Webservers
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Update apt repository
+      apt:
+        update_cache: yes
+
+    - name: Install MariaDB
+      apt:
+        name: mariadb-server
+        state: present
+
+    - name: Ensure MariaDB is running
+      service:
+        name: mariadb
+        state: started
+        enabled: true
+
+    - name: Configure MariaDB to disable symbolic-links for security
+      lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '^#symbolic-links=0'
+        line: 'symbolic-links=0'
+        state: present
+
+    - name: Configure MariaDB to disable symbolic-links and allow only localhost connection
+      lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '^#skip-name-resolve'
+        line: 'skip-name-resolve=1'
+        state: present
+
+    - name: Set wait_timeout, interactive_timeout, connect_timeout in MariaDB
+      lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '^#wait_timeout'
+        line: 'wait_timeout=300'
+        state: present
+
+    - name: Set memory configurations for InnoDB
+      blockinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        block: |
+          [mysqld]
+          innodb_buffer_pool_size = 4G
+          innodb_log_file_size = 1G
+          key_buffer_size = 512M
+
+    - name: Remove test databases for security
+      mysql_db:
+        name: test
+        state: absent
+      become: true
+      become_user: root
+
+    - name: Secure MariaDB installation (e.g., removing insecure defaults)
+      command: mysql_secure_installation
+      args:
+        creates: /etc/mysql/mariadb.conf.d/50-server.cnf
+      become: true
+
+    - name: Allow MySQL through UFW (optional, adjust for your needs)
+      ufw:
+        rule: allow
+        port: '3306'
+        proto: tcp
+        state: enabled
+
+    - name: Restart MariaDB to apply changes
+      service:
+        name: mariadb
+        state: restarted
+
+    - name: Ensure MariaDB SSL is enabled (optional, configure SSL certificates as needed)
+      lineinfile:
+        path: /etc/mysql/mariadb.conf.d/50-server.cnf
+        regexp: '^#ssl-ca'
+        line: |
+          ssl-ca = /etc/mysql/ssl/ca-cert.pem
+          ssl-cert = /etc/mysql/ssl/server-cert.pem
+          ssl-key = /etc/mysql/ssl/server-key.pem
+        state: present

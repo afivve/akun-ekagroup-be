@@ -85,7 +85,7 @@ jobs:
           password: ${{ secrets.GH_Token }}
       - name: Deploy to VPS
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@47.129.241.129 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -t ubuntu@47.129.241.129 << 'EOF'
           docker pull ghcr.io/${{ github.repository }}:latest
           docker network create app-network || true
           docker-compose -f /home/ubuntu/docker-compose.yml up -d --force-recreate

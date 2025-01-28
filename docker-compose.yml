@@ -20,7 +20,7 @@ services:
       - app-network
 
   mysql:
-    image: mariadb:8.0
+    image: mariadb:latest
     restart: always
     environment:
       MARIADB_ROOT_PASSWORD: root

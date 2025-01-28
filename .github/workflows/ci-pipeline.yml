@@ -83,6 +83,8 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GH_Token }}
+      - name: Copy docker-compose.yml to VPS
+        run: scp -o StrictHostKeyChecking=no ./docker-compose.yml ubuntu@47.129.241.129:/home/ubuntu/docker-compose.yml
       - name: Deploy to VPS
         run: |
           ssh -o StrictHostKeyChecking=no -t ubuntu@47.129.241.129 << 'EOF'

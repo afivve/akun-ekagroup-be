@@ -1,5 +1,8 @@
 FROM node:22.13.0-slim
 
+# Install dependencies
+RUN apt-get update && apt-get install -y openssl
+
 # Create app directory
 WORKDIR /usr/src/app
 

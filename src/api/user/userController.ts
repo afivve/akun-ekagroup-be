@@ -38,7 +38,7 @@ class UserController {
       return handleServiceResponse(serviceResponse, res);
     } catch (error) {
       console.error("Error generating PDF:", error);
-      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Failed to generate PDF" });
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: "Failed generate PDF" });
     }
   };
 

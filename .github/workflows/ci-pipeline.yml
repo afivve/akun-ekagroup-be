@@ -147,7 +147,7 @@ jobs:
           EOF
           echo "✅ Staging Deployment Completed!"
 
-deploy-image-production:
+  deploy-image-production:
     runs-on: ubuntu-latest
     needs: deploy-image-staging
     if: github.event_name == 'workflow_dispatch'

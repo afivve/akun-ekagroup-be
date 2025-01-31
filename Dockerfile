@@ -1,7 +1,7 @@
 FROM node:22.13.0-alpine
 
 # Install dependencies
-RUN apt-get update && apt-get install -y openssl
+RUN apk update && apk add --no-cache openssl
 
 # Create app directory
 WORKDIR /usr/src/app

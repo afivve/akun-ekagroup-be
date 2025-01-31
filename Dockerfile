@@ -1,4 +1,4 @@
-FROM node:22.13.0-slim
+FROM node:22.13.0-alpine
 
 # Install dependencies
 RUN apt-get update && apt-get install -y openssl
@@ -22,7 +22,7 @@ RUN npm run prisma:generate
 RUN npm run build
 
 # Expose port 8080
-EXPOSE 8080
+EXPOSE 8000
 
 # Start the app
 ENTRYPOINT ["sh", "-c", "npm run prisma:prod:migrate && npm run start"]

@@ -1,0 +1,38 @@
+---
+- name: Configure Nginx for Webservers
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Copy Nginx configuration file
+      template:
+        src: ../nginx/staging
+        dest: /etc/nginx/sites-available/staging
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Validate Nginx Configuration
+
+    - name: Create symbolic link to enable site
+      file:
+        src: /etc/nginx/sites-available/staging
+        dest: /etc/nginx/sites-enabled/staging
+        state: link
+      notify: Validate Nginx Configuration
+
+    - name: Remove default Nginx site
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      notify: Validate Nginx Configuration
+
+  handlers:
+    - name: Validate Nginx Configuration
+      command: nginx -t
+      register: nginx_test
+      changed_when: false
+      notify: Restart Nginx
+
+    - name: Restart Nginx
+      service:
+        name: nginx
+        state: restarted

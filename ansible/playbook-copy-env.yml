@@ -1,0 +1,18 @@
+- name: Copy ENV file to VPS
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Copy .env.staging file to VPS
+      copy:
+        src: .env.staging
+        dest: /home/ubuntu/staging/.env.staging
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+    - name: Copy .env.production file to VPS
+      copy:
+        src: .env.production
+        dest: /home/ubuntu/production/.env.production
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'

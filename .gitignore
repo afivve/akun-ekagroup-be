@@ -14,10 +14,14 @@ build
 dist-ssr
 *.local
 .env
+.env.production
+.env.staging
+.env.development
 ssh-keys
 inventory.ini
 ansible/vars.yml
 backup_workflows
+nginx
 
 # Editor directories and files
 !.vscode/extensions.json

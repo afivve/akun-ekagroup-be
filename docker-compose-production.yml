@@ -1,0 +1,30 @@
+services:
+  app:
+    image: ${IMAGE_NAME}
+    restart: always
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - mysql
+    env_file:
+      - .env.production
+    networks:
+      - app-network-production
+
+  mysql:
+    image: mariadb:latest
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${MYSQL_DATABASE}
+    volumes:
+      - mysql-data-production:/var/lib/mysql
+    networks:
+      - app-network-production
+
+networks:
+  app-network-production:
+    driver: bridge
+
+volumes:
+  mysql-data-production:

@@ -5,31 +5,26 @@ services:
     ports:
       - "${APP_PORT}:${APP_PORT}"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     env_file:
       - .env
     networks:
-      - app-network-staging
+      - ${DOCKER_NETWORKS}
 
   mysql:
     image: mariadb:latest
     restart: always
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 10s
-      retries: 5
     environment:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MARIADB_DATABASE: ${MYSQL_DATABASE}
     volumes:
-      - mysql-data-staging:/var/lib/mysql
+      - ${DOCKER_MYSQL_VOLUME}
     networks:
-      - app-network-staging
+      - ${DOCKER_NETWORKS}
 
 networks:
-  app-network-staging:
+  ${DOCKER_NETWORKS}:
     driver: bridge
 
 volumes:
-  mysql-data-staging:
+  ${DOCKER_MYSQL_VOLUME}:

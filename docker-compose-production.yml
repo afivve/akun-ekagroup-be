@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     networks:
-      - app-network-production
+      - ${DOCKER_NETWORKS}
 
   mysql:
     image: mariadb:latest
@@ -18,13 +18,13 @@ services:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MARIADB_DATABASE: ${MYSQL_DATABASE}
     volumes:
-      - mysql-data-production:/var/lib/mysql
+      - ${DOCKER_MYSQL_VOLUME}
     networks:
-      - app-network-production
+      - ${DOCKER_NETWORKS}
 
 networks:
-  app-network-production:
+  ${DOCKER_NETWORKS}:
     driver: bridge
 
 volumes:
-  mysql-data-production:
+  ${DOCKER_MYSQL_VOLUME}:

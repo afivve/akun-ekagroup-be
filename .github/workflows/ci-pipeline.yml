@@ -164,7 +164,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
 
-      - name: ⛔ Stop Staging Containers
+      - name: ⛔ Stop Staging Container
         run: |
           echo "::group::⛔ Stopping Staging Containers"
           ssh -o StrictHostKeyChecking=no -t ${{ secrets.SERVER }} << 'EOF'

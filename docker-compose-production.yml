@@ -18,7 +18,7 @@ services:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MARIADB_DATABASE: ${MYSQL_DATABASE}
     volumes:
-      - mysql-data-production:/var/lib/mysql
+      - ${DOCKER_MYSQL_VOLUME_PATH}
     networks:
       - app-network-production
 

@@ -5,7 +5,8 @@ services:
     ports:
       - "${APP_PORT}:${APP_PORT}"
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     env_file:
       - .env
     networks:
@@ -14,6 +15,10 @@ services:
   mysql:
     image: mariadb:latest
     restart: always
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
     environment:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MARIADB_DATABASE: ${MYSQL_DATABASE}

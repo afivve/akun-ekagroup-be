@@ -27,4 +27,4 @@ networks:
     driver: bridge
 
 volumes:
-  ${DOCKER_VOLUME}:
+  mysql-data-staging:

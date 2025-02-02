@@ -27,4 +27,4 @@ networks:
     driver: bridge
 
 volumes:
-  ${DOCKER_MYSQL_VOLUME}:
+  mysql-data-production:

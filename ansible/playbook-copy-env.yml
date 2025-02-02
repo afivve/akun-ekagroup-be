@@ -4,15 +4,15 @@
   tasks:
     - name: Copy .env.staging file to VPS
       copy:
-        src: .env.staging
-        dest: /home/ubuntu/staging/.env.staging
+        src: ../.env.staging
+        dest: /home/ubuntu/staging/.env
         owner: ubuntu
         group: ubuntu
         mode: '0644'
     - name: Copy .env.production file to VPS
       copy:
-        src: .env.production
-        dest: /home/ubuntu/production/.env.production
+        src: ../.env.production
+        dest: /home/ubuntu/production/.env
         owner: ubuntu
         group: ubuntu
         mode: '0644'

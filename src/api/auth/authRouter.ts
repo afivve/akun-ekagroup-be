@@ -3,10 +3,10 @@ import express, { type Router } from "express";
 import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
+import { authController } from "@/api/auth/authController";
 import { ChangePasswordSchema, LoginUserSchema, RegisterUserSchema } from "@/api/auth/authSchema";
 import { verifyToken } from "@/common/middleware/verifyToken";
 import { validateRequest } from "@/common/utils/httpHandlers";
-import { authController } from "./authController";
 
 export const authRegistry = new OpenAPIRegistry();
 export const authRouter: Router = express.Router();

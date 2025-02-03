@@ -70,7 +70,7 @@ describe("AuthService - registerService", () => {
     expect(response.statusCode).toEqual(StatusCodes.CREATED);
     expect(response.success).toBeTruthy();
     expect(response.message).toBe("Register User Berhasil");
-    expect(response.responseObject).toEqual({
+    expect(response.value).toEqual({
       idUser: mockRegisteredUser.idUser,
       username: mockRegisteredUser.username,
       email: mockRegisteredUser.email,
@@ -144,7 +144,7 @@ describe("AuthService - loginService", () => {
     expect(result.statusCode).toBe(StatusCodes.OK);
     expect(result.success).toBeTruthy();
     expect(result.message).toBe("Login berhasil");
-    expect(result.responseObject).toEqual({ token: "valid-token" });
+    expect(result.value).toEqual({ token: "valid-token" });
   });
 
   it("should return failure when username is not registered", async () => {
@@ -163,7 +163,7 @@ describe("AuthService - loginService", () => {
     expect(result.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(result.success).toBeFalsy();
     expect(result.message).toBe("Username Tidak Terdaftar");
-    expect(result.responseObject).toBeNull();
+    expect(result.value).toBeNull();
   });
 
   it("should return failure when password is incorrect", async () => {
@@ -183,7 +183,7 @@ describe("AuthService - loginService", () => {
     expect(result.statusCode).toBe(StatusCodes.UNAUTHORIZED);
     expect(result.success).toBeFalsy();
     expect(result.message).toBe("Password Salah");
-    expect(result.responseObject).toBeNull();
+    expect(result.value).toBeNull();
   });
 
   it("should handle errors gracefully", async () => {
@@ -202,6 +202,6 @@ describe("AuthService - loginService", () => {
     expect(result.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
     expect(result.success).toBeFalsy();
     expect(result.message).toBe("An error occurred while validating login.");
-    expect(result.responseObject).toBeNull();
+    expect(result.value).toBeNull();
   });
 });

@@ -17,8 +17,8 @@ class UserController {
 
   public exportUsersToExcel: RequestHandler = async (req: Request, res: Response) => {
     const serviceResponse = await userService.findAll({});
-    if (serviceResponse.success && serviceResponse.responseObject) {
-      const buffer = await generateUserExcel(serviceResponse.responseObject);
+    if (serviceResponse.success && serviceResponse.value) {
+      const buffer = await generateUserExcel(serviceResponse.value);
       res.setHeader("Content-Disposition", "attachment; filename=users.xlsx");
       res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
       return res.status(StatusCodes.OK).send(buffer);
@@ -29,8 +29,8 @@ class UserController {
   public exportUsersToPDF: RequestHandler = async (req: Request, res: Response) => {
     try {
       const serviceResponse = await userService.findAll({});
-      if (serviceResponse.success && serviceResponse.responseObject) {
-        const buffer = await generateUserPDF(serviceResponse.responseObject);
+      if (serviceResponse.success && serviceResponse.value) {
+        const buffer = await generateUserPDF(serviceResponse.value);
         res.setHeader("Content-Disposition", "attachment; filename=users.pdf");
         res.setHeader("Content-Type", "application/pdf");
         return res.status(StatusCodes.OK).send(buffer);

@@ -25,3 +25,110 @@ model User {
 
   @@map("users")
 }
+
+model Divisi {
+  idDivisi   Int          @id @default(autoincrement()) @map("id_divisi")
+  namaDivisi String       @map("nama_divisi")
+  kodeDivisi String       @unique @map("kode_divisi")
+  akun       Akun[]
+  jurnalUmum JurnalUmum[]
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@map("divisies")
+}
+
+model Kategori {
+  idKategori   Int      @id @default(autoincrement()) @map("id_kategori")
+  namaKategori String   @map("nama_kategori")
+  kodeKategori String   @map("kode_kategori")
+  headNumber   Int      @map("head_number")
+  postIsDebet  Boolean  @map("post_is_debet")
+  akun         Akun[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("kategories")
+}
+
+model Akun {
+  idAkun          Int               @id @default(autoincrement()) @map("id_akun")
+  kodeAkun        String            @map("kode_akun")
+  namaAkun        String            @map("nama_akun")
+  nomorAkun       String            @map("nomor_akun")
+  saldo           Float             @map("saldo_akun")
+  isHeader        Boolean?          @map("is_header") // jika true maka akun ini adalah header
+  isProject       Boolean           @map("is_project")
+  idDivisi        Int               @map("id_divisi")
+  divisi          Divisi            @relation(fields: [idDivisi], references: [idDivisi], onDelete: Cascade)
+  idKategori      Int               @map("id_kategori")
+  kategori        Kategori          @relation(fields: [idKategori], references: [idKategori], onDelete: Cascade)
+  idHeader        Int?              @map("id_header") // jika isHeader true maka idHeader harus null
+  deskripsi       String            @db.Text
+  transaksiJurnal TransaksiJurnal[]
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  // isHeader true, maka akun adalah header
+  // isHeader false, maka akun adalah sub-akun
+  // isHeader null, maka akun adalah akun reguler
+
+  @@map("akuns")
+}
+
+model JurnalUmum {
+  idJurnal         Int               @id @default(autoincrement()) @map("id_jurnal")
+  kodeJurnal       String            @unique @map("kode_jurnal")
+  tanggalTransaksi DateTime          @map("tanggal_transaksi")
+  memo             String
+  isBalance        Boolean           @map("is_balance")
+  jumlah           Float
+  idDivisi         Int               @map("id_divisi")
+  divisi           Divisi            @relation(fields: [idDivisi], references: [idDivisi], onDelete: Cascade)
+  transaksiJurnal  TransaksiJurnal[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@map("jurnal_umums")
+}
+
+model TransaksiJurnal {
+  idTransaksi   Int            @id @default(autoincrement()) @map("id_transaksi")
+  kodeTransaksi String         @unique @map("kode_transaksi")
+  debet         String
+  kredit        Boolean
+  saldo         Float
+  jumlah        Float
+  idJurnal      Int            @map("id_jurnal")
+  jurnalUmum    JurnalUmum     @relation(fields: [idJurnal], references: [idJurnal], onDelete: Cascade)
+  idAkun        Int            @map("id_akun")
+  akun          Akun           @relation(fields: [idAkun], references: [idAkun], onDelete: Cascade)
+  regulatorTag  RegulatorTag[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@map("transaksi_jurnals")
+}
+
+model Tag {
+  idTag     Int            @id @default(autoincrement()) @map("id_tag")
+  kodeTag   String         @unique @map("kode_tag")
+  namaTag   String         @map("nama_tag")
+  regTag    RegulatorTag[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("tags")
+}
+
+model RegulatorTag {
+  idRegulatorTag  Int             @id @default(autoincrement()) @map("id_regulator_tag")
+  id_jurnal       Int             @map("id_jurnal")
+  id_tag          Int             @map("id_tag")
+  tag             Tag             @relation(fields: [id_tag], references: [idTag], onDelete: Cascade)
+  transaksiJurnal TransaksiJurnal @relation(fields: [id_jurnal], references: [idTransaksi], onDelete: Cascade)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@map("regulator_tags")
+}

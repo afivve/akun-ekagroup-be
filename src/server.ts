@@ -6,8 +6,11 @@ import { pino } from "pino";
 import bodyParser from "body-parser";
 
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
+import { akunRouter } from "@/api/akun/akunRouter";
 import { authRouter } from "@/api/auth/authRouter";
+import { divisiRouter } from "@/api/divisi/divisiRouter";
 import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
+import { kategoriRouter } from "@/api/kategori/kategoriRouter";
 import { userRouter } from "@/api/user/userRouter";
 import errorHandler from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
@@ -33,8 +36,11 @@ app.use(requestLogger);
 
 // Routes
 app.use("/health-check", healthCheckRouter);
-app.use("/users", userRouter);
 app.use("/auth", authRouter);
+app.use("/users", userRouter);
+app.use("/kategori", kategoriRouter);
+app.use("/divisi", divisiRouter);
+app.use("/akun", akunRouter);
 
 // Swagger UI
 app.use(openAPIRouter);

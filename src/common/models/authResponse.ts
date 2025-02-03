@@ -1,14 +1,14 @@
-export interface RegisterResponseObject {
+export interface Registervalue {
   email: string;
   username: string;
   fullName: string;
 }
 
-export interface LoginResponseObject {
+export interface Loginvalue {
   token: string;
 }
 
-export interface MeResponseObject {
+export interface Mevalue {
   email: string;
   username: string;
   fullName: string;

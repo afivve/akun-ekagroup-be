@@ -2,12 +2,11 @@ services:
   app:
     image: ${IMAGE_NAME}
     container_name: production_app
-    restart: unless-stopped
+    restart: always
     ports:
       - "${APP_PORT}:${APP_PORT}"
     depends_on:
-      mysql:
-        condition: service_healthy
+      - mysql
     env_file:
       - .env
     networks:
@@ -16,7 +15,7 @@ services:
   mysql:
     image: mariadb:latest
     container_name: production_mysql
-    restart: unless-stopped
+    restart: always
     environment:
       MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MARIADB_DATABASE: ${MYSQL_DATABASE}
@@ -24,11 +23,6 @@ services:
       - ${DOCKER_MYSQL_VOLUME_PATH}
     networks:
       - app-network-production
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
 
 networks:
   app-network-production:

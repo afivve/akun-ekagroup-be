@@ -165,14 +165,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GH_TOKEN }}
 
-      - name: ⛔ Stop Staging Container
-        run: |
-          echo "::group::⛔ Stopping Staging Containers"
-          ssh -o StrictHostKeyChecking=no -t ${{ secrets.SERVER }} << 'EOF'
-          docker-compose -f /home/ubuntu/staging/docker-compose-staging.yml down || true
-          EOF
-          echo "::endgroup::"
-
       - name: 📂 Copy docker-compose-production.yml to VPS
         run: |
           echo "::group::📂 Copying docker-compose file to VPS"

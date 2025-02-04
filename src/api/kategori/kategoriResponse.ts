@@ -18,7 +18,9 @@ export interface KategoriIncludeAkunResponse {
 
     isHeader: boolean | null;
 
-    idHeader: number | null;
+    idHeader: string | null;
+
+    isProject: boolean;
 
     createdAt: Date;
 

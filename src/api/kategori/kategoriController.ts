@@ -11,7 +11,15 @@ class KategoriController {
   };
 
   public getKategoriIncludeAkun: RequestHandler = async (req: Request, res: Response) => {
-    const serviceResponse = await kategoriService.getKategoriIncludeAkunService(Number(req.params.idKategori));
+    const { isHeader, isProject, idDivisi } = req.query;
+
+    const filters = {
+      isHeader: isHeader === "true" ? true : isHeader === "false" ? false : isHeader === "null" ? null : undefined,
+      isProject: isProject === "true" ? true : isProject === "false" ? false : undefined,
+      idDivisi: idDivisi ? Number(idDivisi) : undefined,
+    };
+
+    const serviceResponse = await kategoriService.getKategoriIncludeAkunService(Number(req.params.idKategori), filters);
 
     return handleServiceResponse(serviceResponse, res);
   };

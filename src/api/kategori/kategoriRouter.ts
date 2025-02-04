@@ -36,8 +36,33 @@ kategoriRegistry.registerPath({
   method: "get",
   path: "/kategori/kategori-akun/{idKategori}",
   tags: ["Kategori"],
-  request: { params: GetKategoriIncludeAkunSchema.shape.params },
+  request: {
+    params: GetKategoriIncludeAkunSchema.shape.params,
+    query: z.object({
+      isHeader: z
+        .enum(["true", "false", "null"])
+        .optional()
+        .transform((val) => {
+          if (val === "true") return true;
+          if (val === "false") return false;
+          if (val === "null") return null;
+          return undefined;
+        }),
+      isProject: z
+        .enum(["true", "false"])
+        .optional()
+        .transform((val) => {
+          if (val === "true") return true;
+          if (val === "false") return false;
+          return undefined;
+        }),
+    }),
+  },
   responses: createApiResponse(z.object({ id: z.number() }), "Success"),
 });
 
-kategoriRouter.get("/kategori-akun/:idKategori", validateRequest(GetKategoriIncludeAkunSchema), kategoriController.getKategoriIncludeAkun);
+kategoriRouter.get(
+  "/kategori-akun/:idKategori",
+  validateRequest(GetKategoriIncludeAkunSchema),
+  kategoriController.getKategoriIncludeAkun,
+);

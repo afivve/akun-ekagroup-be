@@ -7,6 +7,7 @@ export class KategoriRepository {
     return await prisma.kategori.create({
       data: {
         namaKategori: data.namaKategori,
+        kodeKategori: data.kodeKategori,
         headNumber: data.headNumber,
         postIsDebet: data.postIsDebet,
       },
@@ -18,6 +19,7 @@ export class KategoriRepository {
       select: {
         idKategori: true,
         namaKategori: true,
+        kodeKategori: true,
         headNumber: true,
         postIsDebet: true,
         createdAt: true,
@@ -36,6 +38,7 @@ export class KategoriRepository {
       select: {
         idKategori: true,
         namaKategori: true,
+        kodeKategori: true,
         headNumber: true,
         postIsDebet: true,
         createdAt: true,
@@ -44,13 +47,23 @@ export class KategoriRepository {
     });
   }
 
-  async getKategoriIncludeAkunRepository(idKategori: number): Promise<(Kategori & { akun: Akun[] })[] | null> {
+  async getKategoriIncludeAkunRepository(filters?: {
+    idKategori: number;
+    isHeader?: boolean | null;
+    isProject?: boolean;
+    idDivisi?: number;
+  }): Promise<(Kategori & { akun: Akun[] })[] | null> {
     return prisma.kategori.findMany({
       where: {
-        idKategori,
+        idKategori: filters?.idKategori,
       },
       include: {
         akun: {
+          where: {
+            isHeader: filters?.isHeader,
+            isProject: filters?.isProject,
+            idDivisi: filters?.idDivisi,
+          },
           select: {
             idAkun: true,
             kodeAkun: true,

@@ -63,7 +63,7 @@ model Akun {
   divisi          Divisi            @relation(fields: [idDivisi], references: [idDivisi], onDelete: Cascade)
   idKategori      Int               @map("id_kategori")
   kategori        Kategori          @relation(fields: [idKategori], references: [idKategori], onDelete: Cascade)
-  idHeader        Int?              @map("id_header") // jika isHeader true maka idHeader harus null
+  idHeader        String?           @map("id_header") // jika isHeader true maka idHeader harus null
   deskripsi       String            @db.Text
   transaksiJurnal TransaksiJurnal[]
   createdAt       DateTime          @default(now())

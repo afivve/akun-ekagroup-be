@@ -37,13 +37,29 @@ export class KategoriService {
 
   async getKategoriIncludeAkunService(
     idKategori: number,
+    filters?: { isHeader?: boolean | null; isProject?: boolean; idDivisi?: number },
   ): Promise<ServiceResponse<KategoriIncludeAkunResponse[] | null>> {
     try {
-      const kategoriResponse = await this.kategoriRepository.getKategoriIncludeAkunRepository(idKategori);
+      const kategoriResponse = await this.kategoriRepository.getKategoriIncludeAkunRepository({
+        idKategori,
+        ...filters,
+      });
 
       if (!kategoriResponse) {
         return ServiceResponse.failure("Kategori not found", [], StatusCodes.NOT_FOUND);
       }
+
+      const baseMessage = `Berhasil Mengambil Data Kategori Berdasarkan ID Kategori '${idKategori}' Beserta Akun`;
+      const filterMessages = [];
+
+      if (filters?.isHeader !== undefined) {
+        filterMessages.push(`isHeader '${filters.isHeader}'`);
+      }
+      if (filters?.isProject !== undefined) {
+        filterMessages.push(`isProject '${filters.isProject}'`);
+      }
+
+      const message = filterMessages.length > 0 ? `${baseMessage} ${filterMessages.join(" dan ")}` : baseMessage;
 
       const saran = "1-1000";
 
@@ -52,6 +68,7 @@ export class KategoriService {
           kategori: {
             namaKategori: kategori.namaKategori,
             idKategori: kategori.idKategori,
+            kodeKategori: kategori.kodeKategori,
             saranNomorAkunBaru: saran,
           },
           akuns: kategori.akun.map((a) => {
@@ -62,6 +79,7 @@ export class KategoriService {
               kodeAkun: a.kodeAkun,
               isHeader: a.isHeader,
               idHeader: a.idHeader,
+              isProject: a.isProject,
               createdAt: a.createdAt,
               updatedAt: a.updatedAt,
             };
@@ -69,7 +87,7 @@ export class KategoriService {
         };
       });
 
-      return ServiceResponse.success("Data Kategori", response, StatusCodes.OK);
+      return ServiceResponse.success(message, response, StatusCodes.OK);
     } catch (ex) {
       const errorMessage = `Error getting category: ${(ex as Error).message}`;
       logger.error(errorMessage);

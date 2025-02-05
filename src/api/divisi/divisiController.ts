@@ -9,6 +9,19 @@ class DivisiController {
 
     return handleServiceResponse(serviceResponse, res);
   };
+
+  public getAllDivisi: RequestHandler = async (req: Request, res: Response) => {
+    const serviceResponse = await divisiService.getAllDivisi()
+
+    return handleServiceResponse(serviceResponse, res);
+  };
+  
+
+  public getDivisiIncludeAkun: RequestHandler = async (req: Request, res: Response) => {
+    const serviceResponse = await divisiService.getDivisiIncludeAkunService(Number(req.params.idDivisi));
+
+    return handleServiceResponse(serviceResponse, res);
+  };
 }
 
 export const divisiController = new DivisiController();

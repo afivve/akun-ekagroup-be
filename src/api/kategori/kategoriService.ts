@@ -16,7 +16,7 @@ export class KategoriService {
 
   async createKategoriService(data: CreateCategory): Promise<ServiceResponse<Kategori | null>> {
     try {
-      const kategoriExist = await this.kategoriRepository.getKategoriRepository(undefined, data.namaKategori);
+      const kategoriExist = await this.kategoriRepository.getKategoriRepository({ namaKategori: data.namaKategori });
       if (kategoriExist) {
         return ServiceResponse.failure("Kategori Sudah Terdaftar", null, StatusCodes.CONFLICT);
       }
@@ -35,10 +35,34 @@ export class KategoriService {
     }
   }
 
+  async getKategoriService(idKategori?: number, namaKategori?: string): Promise<ServiceResponse<Kategori | null>> {
+    try {
+      const kategoriResponse = await this.kategoriRepository.getKategoriRepository({ idKategori, namaKategori });
+
+      if (!kategoriResponse) {
+        return ServiceResponse.failure("Kategori not found", null, StatusCodes.NOT_FOUND);
+      }
+
+      const message = idKategori
+        ? `Berhasil Mengambil Data Kategori Berdasarkan ID Kategori '${idKategori}'`
+        : `Berhasil Mengambil Data Kategori Berdasarkan Nama Kategori '${namaKategori}'`;
+
+      return ServiceResponse.success(message, kategoriResponse, StatusCodes.OK);
+    } catch (ex) {
+      const errorMessage = `Error getting category: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        "An error occurred while getting category.",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async getKategoriIncludeAkunService(
     idKategori: number,
     filters?: { isHeader?: boolean | null; isProject?: boolean; idDivisi?: number },
-  ): Promise<ServiceResponse<KategoriIncludeAkunResponse[] | null>> {
+  ): Promise<ServiceResponse<KategoriIncludeAkunResponse | null>> {
     try {
       const kategoriResponse = await this.kategoriRepository.getKategoriIncludeAkunRepository({
         idKategori,
@@ -46,8 +70,46 @@ export class KategoriService {
       });
 
       if (!kategoriResponse) {
-        return ServiceResponse.failure("Kategori not found", [], StatusCodes.NOT_FOUND);
+        return ServiceResponse.failure("Kategori not found", null, StatusCodes.NOT_FOUND);
       }
+
+      const kodeDivisi = kategoriResponse.akun.map((a) => a.divisi?.kodeDivisi);
+
+      // Cari nomor akun terakhir yang valid
+      const nomorAkunTerakhir = kategoriResponse.akun
+        .map((a) => a.nomorAkun) // Ambil semua nomor akun
+        .filter((nomor) => /^\d+-\d+$/.test(nomor)) // Pastikan formatnya valid, contoh: "1-1025"
+        .map((nomor) => Number(nomor.split("-")[1])) // Ambil angka terakhir setelah "-"
+        .reduce((max, num) => Math.max(max, num), 0); // Cari nomor akun terbesar
+
+      // Naikkan angka terakhir +1
+      const nomorAkunBaru = nomorAkunTerakhir + 1;
+
+      // Buat saran nomor akun baru
+      const saranNomorAkunBaru = `${kodeDivisi}-${nomorAkunBaru}`;
+
+      const response = {
+        kategori: {
+          namaKategori: kategoriResponse.namaKategori,
+          idKategori: kategoriResponse.idKategori,
+          kodeKategori: kategoriResponse.kodeKategori,
+          saranNomorAkunBaru: saranNomorAkunBaru,
+        },
+        akuns: kategoriResponse.akun.map((a) => ({
+          idAkun: a.idAkun,
+          nomorAkun: a.nomorAkun,
+          namaAkun: a.namaAkun,
+          kodeAkun: a.kodeAkun,
+          isHeader: a.isHeader,
+          idHeader: a.idHeader,
+          isProject: a.isProject,
+          idDivisi: a.idDivisi,
+          namaDivisi: a.divisi?.namaDivisi ?? "",
+          kodeDivisi: a.divisi?.kodeDivisi ?? "",
+          createdAt: a.createdAt,
+          updatedAt: a.updatedAt,
+        })),
+      };
 
       const baseMessage = `Berhasil Mengambil Data Kategori Berdasarkan ID Kategori '${idKategori}' Beserta Akun`;
       const filterMessages = [];
@@ -61,39 +123,13 @@ export class KategoriService {
 
       const message = filterMessages.length > 0 ? `${baseMessage} ${filterMessages.join(" dan ")}` : baseMessage;
 
-      const saran = "1-1000";
-
-      const response = kategoriResponse.map((kategori) => {
-        return {
-          kategori: {
-            namaKategori: kategori.namaKategori,
-            idKategori: kategori.idKategori,
-            kodeKategori: kategori.kodeKategori,
-            saranNomorAkunBaru: saran,
-          },
-          akuns: kategori.akun.map((a) => {
-            return {
-              idAkun: a.idAkun,
-              nomorAkun: a.nomorAkun,
-              namaAkun: a.namaAkun,
-              kodeAkun: a.kodeAkun,
-              isHeader: a.isHeader,
-              idHeader: a.idHeader,
-              isProject: a.isProject,
-              createdAt: a.createdAt,
-              updatedAt: a.updatedAt,
-            };
-          }),
-        };
-      });
-
       return ServiceResponse.success(message, response, StatusCodes.OK);
     } catch (ex) {
       const errorMessage = `Error getting category: ${(ex as Error).message}`;
       logger.error(errorMessage);
       return ServiceResponse.failure(
         "An error occurred while getting category.",
-        [],
+        null,
         StatusCodes.INTERNAL_SERVER_ERROR,
       );
     }

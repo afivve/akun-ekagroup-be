@@ -1,6 +1,6 @@
 import type { CreateCategory } from "@/api/kategori/kategoriSchema";
 import { prisma } from "@/common/utils/prismaClient";
-import type { Akun, Kategori, Prisma } from "@prisma/client";
+import type { Akun, Divisi, Kategori, Prisma } from "@prisma/client";
 
 export class KategoriRepository {
   async createKategoriRepository(data: CreateCategory) {
@@ -28,12 +28,11 @@ export class KategoriRepository {
     });
   }
 
-  async getKategoriRepository(idKategori?: number, namaKategori?: string): Promise<Kategori | null> {
+  async getKategoriRepository(filters?: { idKategori?: number; namaKategori?: string }): Promise<Kategori | null> {
     return prisma.kategori.findFirst({
       where: {
-        OR: [idKategori ? { idKategori } : undefined, namaKategori ? { namaKategori } : undefined].filter(
-          Boolean,
-        ) as Prisma.KategoriWhereInput[],
+        idKategori: filters?.idKategori,
+        namaKategori: filters?.namaKategori,
       },
       select: {
         idKategori: true,
@@ -52,8 +51,8 @@ export class KategoriRepository {
     isHeader?: boolean | null;
     isProject?: boolean;
     idDivisi?: number;
-  }): Promise<(Kategori & { akun: Akun[] })[] | null> {
-    return prisma.kategori.findMany({
+  }): Promise<(Kategori & { akun: (Akun & { divisi?: Divisi | null })[] }) | null> {
+    return prisma.kategori.findFirst({
       where: {
         idKategori: filters?.idKategori,
       },
@@ -78,6 +77,15 @@ export class KategoriRepository {
             deskripsi: true,
             createdAt: true,
             updatedAt: true,
+            divisi: {
+              select: {
+                idDivisi: true,
+                namaDivisi: true,
+                kodeDivisi: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            },
           },
         },
       },

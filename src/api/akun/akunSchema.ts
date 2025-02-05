@@ -12,8 +12,8 @@ export const CreateAkunSchema = z
     saldo: z.number().min(0, { message: "saldo is required" }),
     isHeader: z.boolean().nullable(),
     isProject: z.boolean(),
-    idDivisi: z.number().min(1, { message: "idDivisi Id is required" }),
-    idKategori: z.number().min(1, { message: "idKategori Id is required" }),
+    idDivisi: z.number().min(1, { message: "idDivisi is required" }),
+    idKategori: z.number().min(1, { message: "idKategori is required" }),
     idHeader: z.string().nullable(),
     deskripsi: z.string(),
   })

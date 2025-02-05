@@ -10,6 +10,16 @@ class KategoriController {
     return handleServiceResponse(serviceResponse, res);
   };
 
+  public getKategori: RequestHandler = async (req: Request, res: Response) => {
+    const idKategori = req.params.idKategori;
+
+    const namaKategori = req.query.namaKategori;
+
+    const serviceResponse = await kategoriService.getKategoriService(Number(idKategori), namaKategori as string);
+
+    return handleServiceResponse(serviceResponse, res);
+  };
+
   public getKategoriIncludeAkun: RequestHandler = async (req: Request, res: Response) => {
     const { isHeader, isProject, idDivisi } = req.query;
 

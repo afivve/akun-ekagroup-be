@@ -4,6 +4,8 @@ export interface KategoriIncludeAkunResponse {
 
     idKategori: number;
 
+    kodeKategori: string;
+
     saranNomorAkunBaru: string;
   };
 
@@ -21,6 +23,12 @@ export interface KategoriIncludeAkunResponse {
     idHeader: string | null;
 
     isProject: boolean;
+
+    idDivisi: number;
+
+    namaDivisi: string;
+
+    kodeDivisi: string;
 
     createdAt: Date;
 

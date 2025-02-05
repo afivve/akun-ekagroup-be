@@ -1,6 +1,6 @@
 import type { CreateDivisi } from "@/api/divisi/divisiSchema";
 import { prisma } from "@/common/utils/prismaClient";
-import type { Divisi, Prisma } from "@prisma/client";
+import type { Akun, Divisi, Kategori, Prisma } from "@prisma/client";
 
 export class DivisiRepository {
   async createDivisiRepository(data: CreateDivisi) {
@@ -12,7 +12,7 @@ export class DivisiRepository {
     });
   }
 
-  getAllDivisiRepository(): Promise<Divisi[] | []> {
+  async getAllDivisiRepository(): Promise<Divisi[] | []> {
     return prisma.divisi.findMany({
       select: {
         idDivisi: true,
@@ -39,6 +39,50 @@ export class DivisiRepository {
         kodeDivisi: true,
         createdAt: true,
         updatedAt: true,
+      },
+    });
+  }
+
+  async getDivisiIncludeAkunRepository(filters: {
+    idDivisi: number;
+    namaDivisi?: string;
+    kodeDivisi?: string;
+  }): Promise<(Divisi & { akun: (Akun & { kategori?: Kategori | null })[] }) | null> {
+    return prisma.divisi.findFirst({
+      where: {
+        idDivisi: filters?.idDivisi,
+        namaDivisi: filters?.namaDivisi,
+        kodeDivisi: filters?.kodeDivisi,
+      },
+      include: {
+        akun: {
+          select: {
+            idAkun: true,
+            kodeAkun: true,
+            namaAkun: true,
+            idDivisi: true,
+            nomorAkun: true,
+            saldo: true,
+            isHeader: true,
+            isProject: true,
+            idKategori: true,
+            idHeader: true,
+            deskripsi: true,
+            createdAt: true,
+            updatedAt: true,
+            kategori: {
+              select: {
+                idKategori: true,
+                namaKategori: true,
+                kodeKategori: true,
+                headNumber: true,
+                postIsDebet: true,
+                createdAt: true,
+                updatedAt: true,
+              },
+            },
+          },
+        },
       },
     });
   }

@@ -129,7 +129,7 @@ jobs:
       - name: 📂 Copy docker-compose-staging.yml to VPS
         run: |
           echo "::group::📂 Copying docker-compose file to VPS"
-          scp -o StrictHostKeyChecking=no ./docker-compose-staging.yml ${{ secrets.SERVER }}:/home/user1/akun-app-compose/staging/docker-compose-staging.yml
+          scp -P 212 -o StrictHostKeyChecking=no ./docker-compose-staging.yml ${{ secrets.SERVER }}:/home/user1/akun-app-compose/staging/docker-compose-staging.yml
           echo "::endgroup::"
 
       - name: 🚀 Deploy to Staging
@@ -174,7 +174,7 @@ jobs:
       - name: 📂 Copy docker-compose-production.yml to VPS
         run: |
           echo "::group::📂 Copying docker-compose file to VPS"
-          scp -o StrictHostKeyChecking=no ./docker-compose-production.yml ${{ secrets.SERVER }}:/home/user1/akun-app-compose/production/docker-compose-production.yml
+          scp -P 212 -o StrictHostKeyChecking=no ./docker-compose-production.yml ${{ secrets.SERVER }}:/home/user1/akun-app-compose/production/docker-compose-production.yml
           echo "::endgroup::"
 
       - name: 🚀 Deploy to Production

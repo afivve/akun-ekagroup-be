@@ -11,11 +11,10 @@ class DivisiController {
   };
 
   public getAllDivisi: RequestHandler = async (req: Request, res: Response) => {
-    const serviceResponse = await divisiService.getAllDivisi()
+    const serviceResponse = await divisiService.getAllDivisi();
 
     return handleServiceResponse(serviceResponse, res);
   };
-  
 
   public getDivisiIncludeAkun: RequestHandler = async (req: Request, res: Response) => {
     const serviceResponse = await divisiService.getDivisiIncludeAkunService(Number(req.params.idDivisi));

@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import { divisiController } from "@/api/divisi/divisiController";
-import { GetDivisiSchema, CreateDivisiSchema, GetDivisiIncludeAkunSchema } from "@/api/divisi/divisiSchema";
+import { CreateDivisiSchema, GetDivisiIncludeAkunSchema, GetDivisiSchema } from "@/api/divisi/divisiSchema";
 import { verifyToken } from "@/common/middleware/verifyToken";
 import { validateRequest } from "@/common/utils/httpHandlers";
 
@@ -33,14 +33,14 @@ divisiRegistry.registerPath({
 
 divisiRegistry.register("GetDivisi", GetDivisiSchema);
 
-divisiRouter.get("/", divisiController.getAllDivisi)
+divisiRouter.get("/", divisiController.getAllDivisi);
 
 divisiRegistry.registerPath({
   method: "get",
   path: "/divisi",
   tags: ["Divisi"],
   responses: createApiResponse(GetDivisiSchema, "Success"),
-})
+});
 
 divisiRegistry.register("GetDivisiIncludeAkun", GetDivisiIncludeAkunSchema);
 
@@ -59,4 +59,3 @@ divisiRegistry.registerPath({
   },
   responses: createApiResponse(GetDivisiIncludeAkunSchema, "Success"),
 });
-

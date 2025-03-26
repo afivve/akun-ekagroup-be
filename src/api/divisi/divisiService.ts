@@ -7,7 +7,6 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/server";
 import type { Divisi } from "@prisma/client";
 
-
 export class DivisiService {
   private divisiRepository: DivisiRepository;
 
@@ -82,7 +81,7 @@ export class DivisiService {
         })),
       };
 
-      let message = `Berhasil Mengambil Data '${divisiResponse.namaDivisi}' Beserta Akun`
+      const message = `Berhasil Mengambil Data '${divisiResponse.namaDivisi}' Beserta Akun`;
 
       return ServiceResponse.success(message, response, StatusCodes.OK);
     } catch (ex) {

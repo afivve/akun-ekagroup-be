@@ -30,7 +30,7 @@ export class AkunService {
         return ServiceResponse.failure("Divisi Tidak Ditemukan", null, StatusCodes.NOT_FOUND);
       }
 
-      const checkKategori = await this.kategoriRepository.getKategoriRepository(data.idKategori);
+      const checkKategori = await this.kategoriRepository.getKategoriRepository({ idKategori: data.idKategori });
       if (!checkKategori) {
         return ServiceResponse.failure("Kategori Tidak Ditemukan", null, StatusCodes.NOT_FOUND);
       }

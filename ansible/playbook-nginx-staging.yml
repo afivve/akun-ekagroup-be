@@ -6,7 +6,7 @@
     - name: Copy Nginx configuration file
       template:
         src: ../nginx/staging
-        dest: /etc/nginx/sites-available/staging
+        dest: /etc/nginx/sites-available/staging_akun_app
         owner: root
         group: root
         mode: '0644'
@@ -14,8 +14,8 @@
 
     - name: Create symbolic link to enable site
       file:
-        src: /etc/nginx/sites-available/staging
-        dest: /etc/nginx/sites-enabled/staging
+        src: /etc/nginx/sites-available/staging_akun_app
+        dest: /etc/nginx/sites-enabled/staging_akun_app
         state: link
       notify: Validate Nginx Configuration
 

@@ -5,14 +5,10 @@
     - name: Copy .env.staging file to VPS
       copy:
         src: ../.env.staging
-        dest: /home/ubuntu/staging/.env
-        owner: ubuntu
-        group: ubuntu
+        dest: /home/user1/akun-app-compose/staging/.env
         mode: '0644'
     - name: Copy .env.production file to VPS
       copy:
         src: ../.env.production
-        dest: /home/ubuntu/production/.env
-        owner: ubuntu
-        group: ubuntu
+        dest: /home/user1/akun-app-compose/production/.env
         mode: '0644'

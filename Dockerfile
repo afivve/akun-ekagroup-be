@@ -24,5 +24,6 @@ RUN npm run build
 # Expose port 8080
 EXPOSE 8000
 
-# Start the app
-ENTRYPOINT ["sh", "-c", "npm run prisma:prod:migrate && npm run start"]
+# Start the app after migration and seeding
+ENTRYPOINT ["sh", "-c", "npm run prisma:prod:migrate && npm run prisma:seed && npm run start"]
+

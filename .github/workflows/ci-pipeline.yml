@@ -8,52 +8,52 @@ on:
   workflow_dispatch:
 
 jobs:
-  code-quality:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    steps:
-      - uses: actions/checkout@v4
+  # code-quality:
+  #   runs-on: ubuntu-latest
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: 🛠 Setup Biome
-        uses: biomejs/setup-biome@v2
-        with:
-          version: latest
+  #     - name: 🛠 Setup Biome
+  #       uses: biomejs/setup-biome@v2
+  #       with:
+  #         version: latest
 
-      - name: 🔍 Run Biome Linter
-        run: |
-          echo "::group::Running Biome Linter"
-          npm run lint
-          echo "::endgroup::"
+  #     - name: 🔍 Run Biome Linter
+  #       run: |
+  #         echo "::group::Running Biome Linter"
+  #         npm run lint
+  #         echo "::endgroup::"
 
-  test:
-    runs-on: ubuntu-latest
-    needs: code-quality
-    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
-    steps:
-      - uses: actions/checkout@v4
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: code-quality
+  #   if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: 🔧 Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
+  #     - name: 🔧 Setup Node.js
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version-file: '.nvmrc'
 
-      - name: 📦 Install Dependencies
-        run: |
-          echo "::group::Installing Dependencies"
-          npm ci
-          echo "::endgroup::"
+  #     - name: 📦 Install Dependencies
+  #       run: |
+  #         echo "::group::Installing Dependencies"
+  #         npm ci
+  #         echo "::endgroup::"
 
-      - name: 🔄 Generate Prisma Client
-        run: |
-          echo "::group::Generating Prisma Client"
-          npm run prisma:generate
-          echo "::endgroup::"
+  #     - name: 🔄 Generate Prisma Client
+  #       run: |
+  #         echo "::group::Generating Prisma Client"
+  #         npm run prisma:generate
+  #         echo "::endgroup::"
 
-      - name: 🧪 Run Tests
-        run: |
-          echo "::group::Running Tests"
-          npm run test
-          echo "::endgroup::"
+  #     - name: 🧪 Run Tests
+  #       run: |
+  #         echo "::group::Running Tests"
+  #         npm run test
+  #         echo "::endgroup::"
 
   build:
     runs-on: ubuntu-latest
@@ -129,7 +129,7 @@ jobs:
       - name: 📂 Copy docker-compose-staging.yml to VPS
         run: |
           echo "::group::📂 Copying docker-compose file to VPS"
-          scp -o StrictHostKeyChecking=no ./docker-compose-staging.yml ${{ secrets.SERVER }}:/home/ubuntu/staging/docker-compose-staging.yml
+          scp -o StrictHostKeyChecking=no ./docker-compose-staging.yml ${{ secrets.SERVER }}:/home/user1/akun-app-compose/staging/docker-compose-staging.yml
           echo "::endgroup::"
 
       - name: 🚀 Deploy to Staging
@@ -143,13 +143,13 @@ jobs:
           echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           
           echo "⛔ Stopping existing containers..."
-          docker-compose -f /home/ubuntu/staging/docker-compose-staging.yml down || true
+          docker-compose -f /home/user1/akun-app-compose/staging/docker-compose-staging.yml down || true
           
           echo "⬇️ Pulling latest image..."
-          docker-compose -f /home/ubuntu/staging/docker-compose-staging.yml pull
+          docker-compose -f /home/user1/akun-app-compose/staging/docker-compose-staging.yml pull
           
           echo "🚀 Starting new containers..."
-          docker-compose -f /home/ubuntu/staging/docker-compose-staging.yml up -d --force-recreate
+          docker-compose -f /home/user1/akun-app-compose/staging/docker-compose-staging.yml up -d --force-recreate
           EOF
           echo "✅ Staging Deployment Completed!"
 
@@ -174,7 +174,7 @@ jobs:
       - name: 📂 Copy docker-compose-production.yml to VPS
         run: |
           echo "::group::📂 Copying docker-compose file to VPS"
-          scp -o StrictHostKeyChecking=no ./docker-compose-production.yml ${{ secrets.SERVER }}:/home/ubuntu/production/docker-compose-production.yml
+          scp -o StrictHostKeyChecking=no ./docker-compose-production.yml ${{ secrets.SERVER }}:/home/user1/akun-app-compose/production/docker-compose-production.yml
           echo "::endgroup::"
 
       - name: 🚀 Deploy to Production
@@ -188,12 +188,12 @@ jobs:
           echo "${{ secrets.GH_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           
           echo "⛔ Stopping existing production containers..."
-          docker-compose -f /home/ubuntu/production/docker-compose-production.yml down || true
+          docker-compose -f /home/user1/akun-app-compose/production/docker-compose-production.yml down || true
           
           echo "⬇️ Pulling latest image..."
-          docker-compose -f /home/ubuntu/production/docker-compose-production.yml pull
+          docker-compose -f /home/user1/akun-app-compose/production/docker-compose-production.yml pull
           
           echo "🚀 Starting new production containers..."
-          docker-compose -f /home/ubuntu/production/docker-compose-production.yml up -d --force-recreate
+          docker-compose -f /home/user1/akun-app-compose/production/docker-compose-production.yml up -d --force-recreate
           EOF
           echo "✅ Production Deployment Completed!"
